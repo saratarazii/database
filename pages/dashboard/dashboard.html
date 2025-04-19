@@ -8,27 +8,20 @@
 <body>
   <div class="app-container">
     <div class="header"></div>
+
     <div class="content">
       <div class="left-side">
-        <div class="add-button">Add Fire Fit</div>
+        <form class="upload-form" onsubmit="return false">
+          <label for="outfit-upload" class="add-button">Add Fire Fit</label>
+          <input type="file" id="outfit-upload" accept="image/*" required style="display: none;" />
+          <button type="button" id="confirm-button" class="confirm-button">Confirm Fit</button>
+          <div id="status-message"></div>
+        </form>
+
         <div class="items-panel">
           <div class="items-grid-container">
-            <div class="items-grid">
-              <!-- Hats -->
-              <div class="item"><div>🧢</div></div>
-              <div class="item"><div>🧢</div></div>
-              <div class="item"><div>🧢</div></div>
-              <div class="item"><div>🧢</div></div>
-              <!-- Accessories -->
-              <div class="item"><div>👓</div></div>
-              <div class="item"><div>📿</div></div>
-              <div class="item"><div>👓</div></div>
-              <div class="item"><div>💎</div></div>
-              <!-- Shoes -->
-              <div class="item"><div>👟</div></div>
-              <div class="item"><div>👟</div></div>
-              <div class="item"><div>👟</div></div>
-              <div class="item"><div>👟</div></div>
+            <div class="items-grid" id="emoji-grid">
+              <!-- Dynamically filled slots -->
             </div>
           </div>
         </div>
@@ -36,16 +29,165 @@
 
       <div class="right-side">
         <div class="preview-panel">
-          <div class="outfit-preview">
-            <div><div class="hat-img">🧢</div></div>
-            <div><div class="shirt-img">👕</div></div>
-            <div><div class="pants-img">👖</div></div>
-            <div><div class="shoes-img">👟</div></div>
-          </div>
+          <h3>My Closet</h3>
+          <div class="outfit-preview" id="closet-preview"></div>
         </div>
       </div>
     </div>
+
     <div class="footer"></div>
   </div>
+
+  <script>
+    const fileInput = document.getElementById('outfit-upload');
+    const confirmButton = document.getElementById('confirm-button');
+    const closetPreview = document.getElementById('closet-preview');
+    const statusMessage = document.getElementById('status-message');
+    const emojiGrid = document.getElementById('emoji-grid');
+
+    const MAX_SLOTS = 12;
+    const slotFiles = Array(MAX_SLOTS).fill(null);
+    const slots = [];
+
+    function createSlot(index) {
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'item';
+
+      const img = document.createElement('img');
+      img.className = 'slot';
+      img.dataset.index = index;
+      img.dataset.dbid = ''; // To hold database ID
+
+      const plusBtn = document.createElement('button');
+      plusBtn.className = 'plus-button';
+      plusBtn.textContent = '+';
+
+      const minusBtn = document.createElement('button');
+      minusBtn.className = 'minus-button';
+      minusBtn.textContent = '-';
+
+      const buttonGroup = document.createElement('div');
+      buttonGroup.className = 'button-group';
+      buttonGroup.appendChild(plusBtn);
+      buttonGroup.appendChild(minusBtn);
+
+      plusBtn.onclick = () => {
+        if (!img.src || img.src.endsWith('/')) return;
+
+        const container = document.createElement('div');
+        container.classList.add('closet-item');
+
+        const closetImg = document.createElement('img');
+        closetImg.src = img.src;
+        closetImg.classList.add('preview-img');
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-button';
+        removeBtn.textContent = 'Remove';
+        removeBtn.onclick = () => container.remove();
+
+        container.appendChild(closetImg);
+        container.appendChild(removeBtn);
+        closetPreview.appendChild(container);
+      };
+
+      minusBtn.onclick = () => {
+        const dbid = img.dataset.dbid;
+        if (!dbid) return;
+
+        fetch('../../server/delete_outfit.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: dbid })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            img.src = '';
+            img.classList.remove('preview-img');
+            img.dataset.dbid = '';
+            statusMessage.innerHTML = '<div class="success-message">Outfit deleted.</div>';
+          } else {
+            statusMessage.innerHTML = `<div class="error-message">${data.message}</div>`;
+          }
+        })
+        .catch(() => {
+          statusMessage.innerHTML = `<div class="error-message">Deletion failed.</div>`;
+        });
+      };
+
+      itemDiv.appendChild(img);
+      itemDiv.appendChild(buttonGroup);
+      emojiGrid.appendChild(itemDiv);
+      slots[index] = img;
+    }
+
+    for (let i = 0; i < MAX_SLOTS; i++) {
+      createSlot(i);
+    }
+
+    function loadSavedOutfits() {
+      fetch('../../server/get_outfits.php', {
+        method: 'GET',
+        credentials: 'include'
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            const outfits = data.outfits;
+            outfits.slice(0, MAX_SLOTS).forEach((outfit, i) => {
+              const imagePath = '../../' + outfit.image_path;
+              slots[i].src = imagePath;
+              slots[i].classList.add('preview-img');
+              slots[i].dataset.dbid = outfit.id;
+            });
+          } else {
+            console.error('Fetch error:', data.message);
+          }
+        })
+        .catch(err => {
+          console.error('Error fetching outfits:', err);
+        });
+    }
+
+    confirmButton.addEventListener('click', () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("outfit", file);
+
+      fetch('../../server/upload_outfit.php', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include'
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const imagePath = '../../' + data.image_path;
+          const emptyIndex = slots.findIndex(slot => !slot.src || slot.src.endsWith('/'));
+
+          if (emptyIndex !== -1) {
+            slots[emptyIndex].src = imagePath;
+            slots[emptyIndex].classList.add('preview-img');
+            slots[emptyIndex].dataset.dbid = data.id;
+            statusMessage.innerHTML = '<div class="success-message">Fit uploaded!</div>';
+          } else {
+            statusMessage.innerHTML = '<div class="error-message">All slots are full!</div>';
+          }
+        } else {
+          statusMessage.innerHTML = `<div class="error-message">${data.message}</div>`;
+        }
+      })
+      .catch(() => {
+        statusMessage.innerHTML = `<div class="error-message">Upload failed.</div>`;
+      });
+
+      fileInput.value = '';
+    });
+
+    loadSavedOutfits();
+  </script>
 </body>
 </html>
