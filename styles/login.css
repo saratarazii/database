@@ -1,0 +1,118 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+  
+  body {
+    background-color: #ff99dd;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .login-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .gold-star {
+    position: absolute;
+    color: gold;
+    font-size: 30px;
+    text-shadow: 0 0 5px #ffd700;
+  }
+  
+  .star1 { top: 50px; left: 80px; font-size: 35px; }
+  .star2 { top: 30px; left: 150px; font-size: 25px; }
+  .star3 { top: 50px; right: 80px; font-size: 35px; }
+  .star4 { top: 30px; right: 150px; font-size: 25px; }
+  .star5 { top: 90px; left: 50px; font-size: 20px; }
+  .star6 { top: 90px; right: 50px; font-size: 20px; }
+  
+  .welcome-heading {
+    font-size: 50px;
+    margin-top: 120px;
+    margin-bottom: 60px;
+    color: #ff00ff;
+    -webkit-text-stroke: 2px black;
+    text-shadow: 2px 2px 0 black;
+    font-weight: bold;
+  }
+  
+  .form-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+  }
+  
+  .login-form {
+    width: 380px;
+  }
+  
+  .form-group {
+    margin-bottom: 30px;
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    font-size: 24px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid black;
+    background-color: #ff66dd;
+    font-size: 18px;
+    height: 50px;
+  }
+  
+  .login-button {
+    background-color: #ff66dd;
+    border: 2px solid black;
+    color: black;
+    padding: 8px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .signup-link {
+    margin-top: 15px;
+    font-size: 16px;
+    color: black;
+    text-align: center;
+    display: block;
+    text-decoration: none;
+  }
+  
+  .signup-link:hover {
+    text-decoration: underline;
+  }
+  
+  .error-msg {
+    margin-top: 10px;
+    color: red;
+    font-size: 16px;
+  }
+
+  
+  

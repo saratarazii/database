@@ -1,0 +1,125 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #FFF0B5;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .app-container {
+    width: 100%;
+    max-width: 1200px;
+    background-color: #FFF0B5;
+    border: 15px solid #FF90E8;
+    border-radius: 0;
+    overflow: hidden;
+  }
+  
+  .header, .footer {
+    background-color: #FF90E8;
+    height: 40px;
+    width: 100%;
+  }
+  
+  .content {
+    display: flex;
+    padding: 20px;
+    gap: 30px;
+    background-color: #FFF0B5;
+  }
+  
+  .left-side {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 2;
+  }
+  
+  .add-button {
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 24px;
+    font-weight: bold;
+    width: 300px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .items-panel {
+    background-color: #FF90E8;
+    border-radius: 30px;
+    padding: 20px;
+  }
+  
+  .items-grid-container {
+    background-color: #FF90E8;
+    border-radius: 20px;
+    padding: 20px;
+  }
+  
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 25px;
+  }
+  
+  .item {
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .item div {
+    width: 70px;
+    height: 70px;
+    background: #FF90E8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 28px;
+  }
+  
+  .right-side {
+    flex: 1;
+  }
+  
+  .preview-panel {
+    background-color: white;
+    border-radius: 30px;
+    padding: 20px;
+    border: 8px solid #FF69B4;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .outfit-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    height: 100%;
+    justify-content: space-around;
+    padding: 20px 0;
+  }
+  
+  .hat-img, .shirt-img, .pants-img, .shoes-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+  }
+  
+  .hat-img { width: 120px; height: 80px; }
+  .shirt-img { width: 180px; height: 120px; }
+  .pants-img { width: 150px; height: 100px; color: #E75480; }
+  .shoes-img { width: 140px; height: 60px; }
+  
