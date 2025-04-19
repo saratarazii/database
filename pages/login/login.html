@@ -3,21 +3,48 @@
 <head>
   <meta charset="UTF-8" />
   <title>Login | Fire Fit</title>
-  <link rel="stylesheet" href="../../styles/main.css" />
+  <link rel="stylesheet" href="../../styles/login.css" />
 </head>
 <body>
-  <div class="page">
-    <div class="login">
-      <h1>Hey Queen, Welcome Back!</h1>
-      <label for="username">Username</label>
-      <input type="text" id="username" />
-      <label for="password">Password</label>
-      <input type="password" id="password" />
-      <button>Login</button>
-      <p>
-        <a href="../signup/signup.html" class="link">I Need to Make an Account</a>
-      </p>
+  <div class="login-container">
+    <!-- Gold stars -->
+    <div class="gold-star star1">★</div>
+    <div class="gold-star star2">★</div>
+    <div class="gold-star star3">★</div>
+    <div class="gold-star star4">★</div>
+    <div class="gold-star star5">★</div>
+    <div class="gold-star star6">★</div>
+
+    <h1 class="welcome-heading">Hey Queen, Welcome Back!</h1>
+
+    <div class="form-container">
+      <form action="../../server/login.php" method="POST" class="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required />
+        </div>
+
+        <!-- 👇 Error message that will show if ?error=1 is in the URL -->
+        <p id="error-msg" class="error-msg" style="display: none;">
+          Username or password is incorrect.
+        </p>
+
+        <button type="submit" class="login-button">Login</button>
+        <a href="../signup/signup.html" class="signup-link">I Need to Make an Account</a>
+      </form>
     </div>
   </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error')) {
+      document.getElementById('error-msg').style.display = 'block';
+    }
+  </script>
 </body>
 </html>

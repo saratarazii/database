@@ -1,32 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8\" />
+  <meta charset="UTF-8" />
   <title>Sign Up | Fire Fit</title>
-  <link rel="stylesheet" href="../../styles/main.css" />
+  <link rel="stylesheet" href="../../styles/signup.css" />
 </head>
 <body>
   <div class="page">
     <h2 class="title">First time? Don't worry, you're gonna slay.</h2>
     <div class="signup-box">
-      <form class="signup-form">
+      <form class="signup-form" action="/fire-fit-app/server/signup.php" method="POST">
         <div class="row">
           <div>
             <label>First Name</label>
-            <input type="text" />
+            <input type="text" name="first_name" required />
           </div>
           <div>
             <label>Last Name</label>
-            <input type="text" />
+            <input type="text" name="last_name" required />
           </div>
         </div>
         <label>Username</label>
-        <input type="text" />
+        <input type="text" name="username" required />
         <label>Password</label>
-        <input type="password" />
+        <input type="password" name="password" required />
+
+        <!-- ⚠️ Error message if username exists -->
+        <p id="error-msg" class="error-msg" style="display:none;">
+          That username already exists, try a slay-er one.
+        </p>
+
         <button type="submit">Create Account</button>
       </form>
     </div>
   </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error') && params.get('error') === 'exists') {
+      document.getElementById('error-msg').style.display = 'block';
+    }
+  </script>
 </body>
 </html>
