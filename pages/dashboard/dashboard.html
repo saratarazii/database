@@ -4,17 +4,34 @@
   <meta charset="UTF-8">
   <title>Fire Fit Creator</title>
   <link rel="stylesheet" href="../../styles/dashboard.css" />
+  <style>
+    .logout-button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    padding: 6px 18px;
+    font-size: 18px;
+    border-radius: 30px;
+    margin-top: 1px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 999;
+  }
+  </style>
 </head>
 <body>
   <div class="app-container">
     <div class="header"></div>
-
     <div class="content">
       <div class="left-side">
         <form class="upload-form" onsubmit="return false">
           <label for="outfit-upload" class="add-button">Upload Fire Fit</label>
           <input type="file" id="outfit-upload" accept="image/*" required style="display: none;" />
           <button type="button" id="confirm-button" class="confirm-button">Add To Board</button>
+          <button type="button" id="logout-button" class="logout-button">Logout</button>
           <div id="status-message"></div>
         </form>
 
@@ -34,7 +51,6 @@
         </div>
       </div>
     </div>
-
     <div class="footer"></div>
   </div>
 
@@ -188,6 +204,11 @@
     });
 
     loadSavedOutfits();
+
+    document.getElementById('logout-button').addEventListener('click', () => {
+      window.location.href = '../../server/logout.php';
+    });
+
   </script>
 </body>
 </html>
