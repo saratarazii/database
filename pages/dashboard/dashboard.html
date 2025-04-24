@@ -30,7 +30,7 @@
         <form class="upload-form" onsubmit="return false">
           <label for="outfit-upload" class="add-button">Upload Fire Fit</label>
           <input type="file" id="outfit-upload" accept="image/*" required style="display: none;" />
-          <button type="button" id="confirm-button" class="confirm-button">Add To Board</button>
+          <!-- <button type="button" id="confirm-button" class="confirm-button">Add To Board</button> -->
           <button type="button" id="logout-button" class="logout-button">Logout</button>
           <div id="status-message"></div>
         </form>
@@ -166,7 +166,7 @@
         });
     }
 
-    confirmButton.addEventListener('click', () => {
+    fileInput.addEventListener('change', () => {
       const file = fileInput.files[0];
       if (!file) return;
 
