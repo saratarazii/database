@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Fire Fit Creator</title>
   <link rel="stylesheet" href="../../styles/dashboard.css" />
 </head>
+
 <body>
   <div class="app-container">
     <div class="header"></div>
-
     <div class="content">
       <div class="left-side">
         <form class="upload-form" onsubmit="return false">
           <label for="outfit-upload" class="add-button">Upload Fire Fit</label>
           <input type="file" id="outfit-upload" accept="image/*" required style="display: none;" />
-          <button type="button" id="confirm-button" class="confirm-button">Add To Board</button>
+          <!-- <button type="button" id="confirm-button" class="confirm-button">Add To Board</button> -->
+          <button type="button" id="logout-button" class="logout-button">Logout</button>
           <div id="status-message"></div>
         </form>
 
@@ -34,7 +36,6 @@
         </div>
       </div>
     </div>
-
     <div class="footer"></div>
   </div>
 
@@ -100,26 +101,28 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: dbid })
         })
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'success') {
-            img.src = '';
-            img.classList.remove('preview-img');
-            img.dataset.dbid = '';
-            statusMessage.innerHTML = '<div class="success-message">Outfit deleted.</div>';
-          } else {
-            statusMessage.innerHTML = `<div class="error-message">${data.message}</div>`;
-          }
-        })
-        .catch(() => {
-          statusMessage.innerHTML = `<div class="error-message">Deletion failed.</div>`;
-        });
+          .then(res => res.json())
+          .then(data => {
+            if (data.status === 'success') {
+              const i = parseInt(img.dataset.index);
+              slotFiles[i] = null;
+              emojiGrid.replaceChild(createSlot(i), emojiGrid.children[i]);
+
+              statusMessage.innerHTML = '<div class="success-message">Outfit deleted.</div>';
+            } else {
+              statusMessage.innerHTML = `<div class="error-message">${data.message}</div>`;
+            }
+          })
+          .catch(() => {
+            statusMessage.innerHTML = '<div class="error-message">Deletion failed.</div>';
+          });
       };
 
       itemDiv.appendChild(img);
       itemDiv.appendChild(buttonGroup);
       emojiGrid.appendChild(itemDiv);
       slots[index] = img;
+      return itemDiv;
     }
 
     for (let i = 0; i < MAX_SLOTS; i++) {
@@ -150,7 +153,7 @@
         });
     }
 
-    confirmButton.addEventListener('click', () => {
+    fileInput.addEventListener('change', () => {
       const file = fileInput.files[0];
       if (!file) return;
 
@@ -162,32 +165,38 @@
         body: formData,
         credentials: 'include'
       })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === 'success') {
-          const imagePath = '../../' + data.image_path;
-          const emptyIndex = slots.findIndex(slot => !slot.src || slot.src.endsWith('/'));
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            const imagePath = '../../' + data.image_path;
+            const emptyIndex = slots.findIndex(slot => !slot.src || slot.src.endsWith('/'));
 
-          if (emptyIndex !== -1) {
-            slots[emptyIndex].src = imagePath;
-            slots[emptyIndex].classList.add('preview-img');
-            slots[emptyIndex].dataset.dbid = data.id;
-            statusMessage.innerHTML = '<div class="success-message">Fit uploaded!</div>';
+            if (emptyIndex !== -1) {
+              slots[emptyIndex].src = imagePath;
+              slots[emptyIndex].classList.add('preview-img');
+              slots[emptyIndex].dataset.dbid = data.id;
+              statusMessage.innerHTML = '<div class="success-message">Fit uploaded!</div>';
+            } else {
+              statusMessage.innerHTML = '<div class="error-message">All slots are full!</div>';
+            }
           } else {
-            statusMessage.innerHTML = '<div class="error-message">All slots are full!</div>';
+            statusMessage.innerHTML = `<div class="error-message">${data.message}</div>`;
           }
-        } else {
-          statusMessage.innerHTML = `<div class="error-message">${data.message}</div>`;
-        }
-      })
-      .catch(() => {
-        statusMessage.innerHTML = `<div class="error-message">Upload failed.</div>`;
-      });
+        })
+        .catch(() => {
+          statusMessage.innerHTML = `<div class="error-message">Upload failed.</div>`;
+        });
 
       fileInput.value = '';
     });
 
     loadSavedOutfits();
+
+    document.getElementById('logout-button').addEventListener('click', () => {
+      window.location.href = '../../server/logout.php';
+    });
+
   </script>
 </body>
+
 </html>
