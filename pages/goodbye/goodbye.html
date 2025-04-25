@@ -43,6 +43,11 @@
             position: relative;
         }
 
+        .pet-image img {
+            max-width: 100%;
+            border-radius: 15px;
+        }
+
         .login-section {
             position: absolute;
             bottom: 30px;
@@ -68,6 +73,8 @@
             font-size: 1.5rem;
             cursor: pointer;
             font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .login-button:hover {
@@ -110,7 +117,9 @@
 
     <div class="login-section">
         <p class="login-text">More fits to serve?</p>
-        <button class="login-button">Login</button>
+        <a href="../login/login.html" style="text-decoration: none;">
+            <button class="login-button">Login</button>
+        </a>
     </div>
 </body>
 </html>
