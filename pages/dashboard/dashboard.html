@@ -5,25 +5,6 @@
   <meta charset="UTF-8">
   <title>Fire Fit Creator</title>
   <link rel="stylesheet" href="../../styles/dashboard.css" />
-<!-- <style>
-    
-    .save-outfit {
-    bottom: 30px;
-    right: 10px;
-    background-color: #FF69B4;
-    color: white;
-    border: none;
-    padding: 6px 18px;
-    font-size: 18px;
-    border-radius: 30px;
-    margin-top: 1px;
-    cursor: pointer;
-    font-weight: bold;
-    z-index: 999;
-  }
-
-</style> -->
-
 </head>
 
 <body>
@@ -105,6 +86,12 @@
         removeBtn.className = 'remove-button';
         removeBtn.textContent = 'Remove';
         removeBtn.onclick = () => container.remove();
+
+        // Get dbid from the image
+        const outfitId = img.dataset.dbid;
+
+        // Set it onto the container
+        container.dataset.outfitId = outfitId;
 
         container.appendChild(closetImg);
         container.appendChild(removeBtn);
@@ -213,6 +200,34 @@
 
     document.getElementById('logout-button').addEventListener('click', () => {
       window.location.href = '../../server/logout.php';
+    });
+
+    document.getElementById('save-outfit').addEventListener('click', function () {
+      const closetItems = document.querySelectorAll(".closet-item");
+      const outfitIds = Array.from(closetItems).map(item => parseInt(item.dataset.outfitId));
+
+      if (outfitIds.length === 0) {
+        alert("No outfits selected!");
+        return;
+      }
+
+      fetch('../../server/save_firefit.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ outfit_ids: outfitIds })
+      })
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            window.location.href = '../../pages/savedoutfits/savedoutfits.html';
+          } else {
+            alert(data.message);
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Error saving Fire Fit.');
+        });
     });
 
   </script>

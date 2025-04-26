@@ -207,5 +207,40 @@
       </div>
     </div>
   </div>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      fetch('../../server/get_firefits.php', {
+        method: 'GET',
+        credentials: 'include'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          const outfits = data.firefits;  // firefits should be an array of outfits
+          const outfitCards = document.querySelectorAll('.outfit-card');
+  
+          outfits.forEach((outfit, index) => {
+            if (index < outfitCards.length) {
+              const card = outfitCards[index];
+              card.innerHTML = '';  // Clear the '+' sign
+  
+              outfit.items.forEach(item => {
+                const img = document.createElement('img');
+                img.src = '../../' + item.image_path; // Assuming backend sends the correct path
+                img.style.maxWidth = '100px';  // Or whatever fits
+                img.style.margin = '5px';
+                card.appendChild(img);
+              });
+            }
+          });
+        } else {
+          console.error(data.message);
+        }
+      })
+      .catch(err => {
+        console.error('Error loading firefits:', err);
+      });
+    });
+  </script>
 </body>
 </html>

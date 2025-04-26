@@ -20,3 +20,20 @@ CREATE TABLE `firefit_db`.`outfits` (
 ) ENGINE = InnoDB;
 
 
+-- fire fits table
+CREATE TABLE fire_fits (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
+-- items associated w/ each fire fit table
+CREATE TABLE fire_fit_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  fire_fit_id INT NOT NULL,
+  outfit_id INT NOT NULL,
+  FOREIGN KEY (fire_fit_id) REFERENCES fire_fits(id),
+  FOREIGN KEY (outfit_id) REFERENCES outfits(id)
+);
