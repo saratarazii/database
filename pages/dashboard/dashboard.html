@@ -5,6 +5,25 @@
   <meta charset="UTF-8">
   <title>Fire Fit Creator</title>
   <link rel="stylesheet" href="../../styles/dashboard.css" />
+<!-- <style>
+    
+    .save-outfit {
+    bottom: 30px;
+    right: 10px;
+    background-color: #FF69B4;
+    color: white;
+    border: none;
+    padding: 6px 18px;
+    font-size: 18px;
+    border-radius: 30px;
+    margin-top: 1px;
+    cursor: pointer;
+    font-weight: bold;
+    z-index: 999;
+  }
+
+</style> -->
+
 </head>
 
 <body>
@@ -15,7 +34,6 @@
         <form class="upload-form" onsubmit="return false">
           <label for="outfit-upload" class="add-button">Upload Fire Fit</label>
           <input type="file" id="outfit-upload" accept="image/*" required style="display: none;" />
-          <!-- <button type="button" id="confirm-button" class="confirm-button">Add To Board</button> -->
           <button type="button" id="logout-button" class="logout-button">Logout</button>
           <div id="status-message"></div>
         </form>
@@ -34,6 +52,7 @@
           <h3>My Closet</h3>
           <div class="outfit-preview" id="closet-preview"></div>
         </div>
+        <button type="button" id="save-outfit" class="save-outfit">FIRE FIT!</button>
       </div>
     </div>
     <div class="footer"></div>
