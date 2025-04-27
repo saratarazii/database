@@ -5,11 +5,129 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fire Fit App</title>
   <link rel="stylesheet" href="styles/home.css" />
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+    
+    body {
+      background-color: #f8a6e1; /* Pink background */
+      font-family: Arial, sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .page {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      position: relative;
+    }
+    
+    .centered {
+      font-size: 4rem;
+      font-weight: bold;
+      color: black;
+      text-shadow:#FF69B4;
+      text-decoration: #FF69B4;
+      text-decoration-color: #FF69B4;
+      text-align: center;
+      text-shadow: 2px 2px 0 #000;
+      z-index: 2;
+    }
+    
+    .click-start {
+      margin-top: 20px;
+      font-size: 1.5rem;
+      text-align: center;
+      z-index: 2;
+    }
+    
+    .kid-left {
+      position: absolute;
+      bottom: 0;
+      left: 30px;
+      height: 500px;
+      z-index: 0;
+    }
+    
+    .kid-right {
+      position: absolute;
+      bottom: 0;
+      right: 30px;
+      height: 600px;
+      z-index: 0;
+    }
+
+    /* Star styles */
+    .star {
+      position: absolute;
+      color: yellow;
+      font-size: 24px;
+      z-index: 0;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.3; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.3; transform: scale(0.8); }
+    }
+  </style>
 </head>
 <body>
+  <!-- Images -->
+  <img src="uploads/girlwithdolls.png" alt="Girl with Dolls" class="kid-left">
+  <img src="uploads/coolguy.png" alt="Doll with sunglasses" class="kid-right">
+  
+  <!-- Stars will be added here with JavaScript -->
+  
+  <!-- Main content -->
   <div class="page">
     <a href="pages/login/login.html" class="centered">Make Your Fire Fit</a>
     <p class="click-start">Click to Start</p>
   </div>
+
+  <script>
+    // Create stars on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      createStars(20); // Create 20 stars
+    });
+
+    function createStars(count) {
+      for (let i = 0; i < count; i++) {
+        createStar();
+      }
+    }
+
+    function createStar() {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.innerHTML = '★'; // Star character
+      
+      // Random position
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      
+      star.style.left = x + 'px';
+      star.style.top = y + 'px';
+      
+      // Random size
+      const size = Math.random() * 20 + 10;
+      star.style.fontSize = size + 'px';
+      
+      // Random animation delay
+      const delay = Math.random() * 3;
+      star.style.animationDelay = delay + 's';
+      
+      document.body.appendChild(star);
+    }
+  </script>
 </body>
 </html>
