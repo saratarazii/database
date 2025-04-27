@@ -29,9 +29,9 @@ $stmt = $conn->prepare("DELETE FROM outfits WHERE id = ?");
 $stmt->bind_param("i", $outfitId);
 
 if ($stmt->execute()) {
-  echo json_encode(["status" => "success", "message" => "Outfit deleted."]);
+  echo json_encode(["status" => "success", "message" => "Item deleted."]);
 } else {
-  echo json_encode(["status" => "error", "message" => "Failed to delete outfit."]);
+  echo json_encode(["status" => "error", "message" => "Failed to delete Item."]);
 }
 
 $conn->close();

@@ -174,6 +174,75 @@
       margin-bottom: 10px;
     }
 
+    /* New styles for delete button */
+    .delete-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #ff3366;
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+    }
+
+    .delete-button:hover {
+      opacity: 1;
+    }
+
+    /* Modal styles for confirmation */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #FFF0B5;
+      margin: 15% auto;
+      padding: 20px;
+      border: 3px solid #FF50D6;
+      border-radius: 20px;
+      width: 300px;
+      text-align: center;
+    }
+
+    .modal-buttons {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .modal-button {
+      padding: 8px 20px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+    }
+
+    .confirm-delete {
+      background-color: #ff3366;
+      color: white;
+    }
+
+    .cancel-delete {
+      background-color: #dddddd;
+    }
+
     @media (max-width: 768px) {
       .showcase-title {
         font-size: 2.2rem;
@@ -194,26 +263,26 @@
     <div class="outfit-gallery">
       <!-- First row of outfits -->
       <div class="outfit-row">
-        <div class="outfit-card">
+        <div class="outfit-card" data-outfit-id="">
           <div class="empty-card">+</div>
         </div>
-        <div class="outfit-card">
+        <div class="outfit-card" data-outfit-id="">
           <div class="empty-card">+</div>
         </div>
-        <div class="outfit-card">
+        <div class="outfit-card" data-outfit-id="">
           <div class="empty-card">+</div>
         </div>
       </div>
 
       <!-- Second row of outfits -->
       <div class="outfit-row">
-        <div class="outfit-card">
+        <div class="outfit-card" data-outfit-id="">
           <div class="empty-card">+</div>
         </div>
-        <div class="outfit-card">
+        <div class="outfit-card" data-outfit-id="">
           <div class="empty-card">+</div>
         </div>
-        <div class="outfit-card">
+        <div class="outfit-card" data-outfit-id="">
           <div class="empty-card">+</div>
         </div>
       </div>
@@ -227,8 +296,31 @@
       </div>
     </div>
   </div>
+
+  <!-- Delete confirmation modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <p>Are you sure you want to delete this outfit?</p>
+      <div class="modal-buttons">
+        <button class="modal-button confirm-delete" id="confirmDelete">Yes, Delete</button>
+        <button class="modal-button cancel-delete" id="cancelDelete">Cancel</button>
+      </div>
+    </div>
+  </div>
+
   <script>
+    let currentOutfitIdToDelete = null;
+    const modal = document.getElementById('deleteModal');
+    const confirmDeleteBtn = document.getElementById('confirmDelete');
+    const cancelDeleteBtn = document.getElementById('cancelDelete');
+
+    // Load outfits when the page loads
     window.addEventListener('DOMContentLoaded', () => {
+      loadOutfits();
+    });
+
+    // Function to load all outfits
+    function loadOutfits() {
       fetch('../../server/get_firefits.php', {
         method: 'GET',
         credentials: 'include'
@@ -243,14 +335,37 @@
               if (index < outfitCards.length) {
                 const card = outfitCards[index];
                 card.innerHTML = '';  // Clear the '+' sign
+                
+                // Add outfit ID to the card as a data attribute
+                card.setAttribute('data-outfit-id', outfit.id);
 
+                // Create delete button
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-button';
+                deleteBtn.innerHTML = '×';
+                deleteBtn.addEventListener('click', function(e) {
+                  e.stopPropagation();
+                  showDeleteConfirmation(outfit.id);
+                });
+                card.appendChild(deleteBtn);
+
+                // Add outfit items
+                const itemsContainer = document.createElement('div');
+                itemsContainer.style.display = 'flex';
+                itemsContainer.style.flexDirection = 'column';
+                itemsContainer.style.alignItems = 'center';
+                itemsContainer.style.justifyContent = 'center';
+                itemsContainer.style.height = '100%';
+                
                 outfit.items.forEach(item => {
                   const img = document.createElement('img');
                   img.src = '../../' + item.image_path; // Assuming backend sends the correct path
                   img.style.maxWidth = '100px';  // Or whatever fits
                   img.style.margin = '5px';
-                  card.appendChild(img);
+                  itemsContainer.appendChild(img);
                 });
+                
+                card.appendChild(itemsContainer);
               }
             });
           } else {
@@ -260,10 +375,66 @@
         .catch(err => {
           console.error('Error loading firefits:', err);
         });
-    });
+    }
 
+// Function to show delete confirmation
+function showDeleteConfirmation(outfitId) {
+  currentOutfitIdToDelete = outfitId;
+  modal.style.display = 'block';
+}
+
+// Handle delete confirmation
+confirmDeleteBtn.addEventListener('click', function() {
+  if (currentOutfitIdToDelete) {
+    deleteOutfit(currentOutfitIdToDelete);
+  }
+  modal.style.display = 'none';
+});
+
+// Delete outfit function
+function deleteOutfit(outfitId) {
+  fetch('../../server/delete_item.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: 'outfit_id=' + outfitId,
+    credentials: 'include'  // Important: include cookies for session
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      // Reload the outfits after deletion
+      loadOutfits();
+    } else {
+      console.error('Error deleting outfit:', data.message);
+      
+      // If user is not logged in, redirect to login page
+      if (data.message === 'User not logged in') {
+        alert('Your session has expired. Please log in again.');
+        window.location.href = '../../login.html'; // Adjust path as needed
+      } else {
+        alert('Could not delete outfit: ' + data.message);
+      }
+    }
+  })
+  .catch(err => {
+    console.error('Error:', err);
+    alert('An error occurred while trying to delete the outfit.');
+  });
+}
+
+    // Logout button handler
     document.getElementById('logout-button').addEventListener('click', () => {
       window.location.href = '../../server/logout.php';
+    });
+
+    // Close modal if user clicks outside of it
+    window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+        currentOutfitIdToDelete = null;
+      }
     });
   </script>
 </body>
