@@ -4,8 +4,67 @@
   <meta charset="UTF-8" />
   <title>Login | Fire Fit</title>
   <link rel="stylesheet" href="../../styles/login.css" />
+  <style>
+    /* Adding additional styles for the images */
+    .background {
+      background-color: #f8a6e1; /* Pink background color matching the image */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+    }
+    
+    .kids-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .kid-left {
+      position: absolute;
+      bottom: 0;
+      left: 5%;
+      height: 75%;
+      z-index: -1;
+    }
+    
+    .kid-right {
+      position: absolute;
+      bottom: 0;
+      right: 5%;
+      height: 70%;
+      z-index: -1;
+    }
+    
+    /* Position the login container better without the title */
+    .login-container {
+      margin-top: 10vh;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Adjust some existing styles to better match the image */
+    .welcome-heading {
+      margin-top: 80px;
+    }
+  </style>
 </head>
 <body>
+  <!-- Pink background -->
+  <div class="background"></div>
+  
+  <!-- Kids images container -->
+  <div class="kids-container">
+    <img src="../../uploads/babyholdingtyler.png" alt="Kid with vinyl record" class="kid-left">
+    <img src="../../uploads/manlookingout.png" alt="Kid with headphones" class="kid-right">
+  </div>
+
   <div class="login-container">
     <!-- Gold stars -->
     <div class="gold-star star1">★</div>
@@ -14,32 +73,32 @@
     <div class="gold-star star4">★</div>
     <div class="gold-star star5">★</div>
     <div class="gold-star star6">★</div>
-
+    
     <h1 class="welcome-heading">Hey Queen, Welcome Back!</h1>
-
+    
     <div class="form-container">
       <form action="../../server/login.php" method="POST" class="login-form">
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" name="username" required />
         </div>
-
+        
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" name="password" required />
         </div>
-
+        
         <!-- 👇 Error message that will show if ?error=1 is in the URL -->
         <p id="error-msg" class="error-msg" style="display: none;">
           Username or password is incorrect.
         </p>
-
+        
         <button type="submit" class="login-button">Login</button>
-        <a href="../signup/signup.html" class="signup-link">I Need to Make an Account</a> <!-- dont need to change filename -->
+        <a href="../signup/signup.html" class="signup-link">I Need to Make an Account</a>
       </form>
     </div>
   </div>
-
+  
   <script>
     const params = new URLSearchParams(window.location.search);
     if (params.has('error')) {
