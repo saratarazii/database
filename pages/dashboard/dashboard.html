@@ -75,6 +75,12 @@
 
       plusBtn.onclick = () => {
         if (!img.src || img.src.endsWith('/')) return;
+        const currentItems = document.querySelectorAll("#closet-preview .closet-item");
+        if (currentItems.length >= 4) {
+          alert('You can only add up to 4 items to an outfit!');
+          return;
+  }
+
 
         const container = document.createElement('div');
         container.classList.add('closet-item');
@@ -115,7 +121,7 @@
               slotFiles[i] = null;
               emojiGrid.replaceChild(createSlot(i), emojiGrid.children[i]);
 
-              statusMessage.innerHTML = '<div class="success-message">Item deleted.</div>';
+              statusMessage.innerHTML = '<div class="success-message">Outfit deleted.</div>';
             } else {
               statusMessage.innerHTML = `<div class="error-message">${data.message}</div>`;
             }
