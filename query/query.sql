@@ -33,3 +33,5 @@ CREATE TABLE fire_fit_items (
   FOREIGN KEY (fire_fit_id) REFERENCES fire_fits(id) ON DELETE CASCADE,
   FOREIGN KEY (outfit_id) REFERENCES outfits(id) ON DELETE CASCADE
 ) ENGINE = InnoDB;
+
+
