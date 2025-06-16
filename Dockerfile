@@ -1,7 +1,10 @@
 FROM php:8.2-apache
 
-# Copy project files into the container
+# Install mysqli extension and dependencies
+RUN docker-php-ext-install mysqli
+
+# Copy your app files
 COPY . /var/www/html/
 
-# Enable Apache mod_rewrite if needed
+# Enable apache mod_rewrite if needed
 RUN a2enmod rewrite
